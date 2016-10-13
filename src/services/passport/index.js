@@ -1,5 +1,4 @@
 import passport from 'passport'
-import { Schema } from 'bodymen'
 import { BasicStrategy } from 'passport-http'
 import { Strategy as BearerStrategy } from 'passport-http-bearer'
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
@@ -33,7 +32,7 @@ export const session = ({ required, roles = User.roles } = {}) => (req, res, nex
   })(req, res, next)
 
 passport.use('basic', new BasicStrategy((email, password, done) => {
-  const userSchema = new Schema({ email: schema.tree.email, password: schema.tree.password })
+  const userSchema = { email: schema.tree.email, password: schema.tree.password }
 
   userSchema.validate({ email, password }, (err) => {
     if (err) done(err)
