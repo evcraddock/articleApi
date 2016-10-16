@@ -1,0 +1,8 @@
+---
+applications:
+- name: mustangnewsservice
+  memory: 128MB
+  instances: 1
+  command: node .
+services:
+- mustangdb

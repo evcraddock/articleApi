@@ -18,6 +18,15 @@ if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
   })
 }
 
+var MONGODB_URI;
+if(process.env.VCAP_SERVICES == null) {
+  MONGODB_URI = 'mongodb://192.168.99.100:32768';
+}
+else {
+  var vcap_services = JSON.parse(process.env.VCAP_SERVICES);
+  MONGODB_URI = vcap_services['mlab'][0].credentials.uri;
+}
+
 const config = {
   all: {
     env: process.env.NODE_ENV || 'development',
@@ -36,7 +45,7 @@ const config = {
   },
   test: {
     mongo: {
-      uri: 'mongodb://localhost/mustang-news-service-test',
+      uri: MONGODB_URI,
       options: {
         debug: false
       }
@@ -44,7 +53,7 @@ const config = {
   },
   development: {
     mongo: {
-      uri: 'mongodb://192.168.99.100:32768',
+      uri: MONGODB_URI,
       options: {
         debug: true
       }
@@ -54,7 +63,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.PORT || 8080,
     mongo: {
-      uri: process.env.MONGODB_URI || 'mongodb://localhost/mustang-news-service'
+      uri: MONGODB_URI
     }
   }
 }

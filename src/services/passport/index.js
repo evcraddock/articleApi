@@ -34,9 +34,9 @@ export const session = ({ required, roles = User.roles } = {}) => (req, res, nex
 passport.use('basic', new BasicStrategy((email, password, done) => {
   const userSchema = { email: schema.tree.email, password: schema.tree.password }
 
-  userSchema.validate({ email, password }, (err) => {
-    if (err) done(err)
-  })
+  // userSchema.validate({ email, password }, (err) => {
+  //   if (err) done(err)
+  // })
 
   User.findOne({ email }).then((user) => {
     if (!user) {

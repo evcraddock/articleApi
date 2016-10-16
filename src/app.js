@@ -9,9 +9,11 @@ const server = http.createServer(app)
 
 mongoose.connect(mongo.uri)
 
+app.set('port', process.env.PORT || 9000);
+
 setImmediate(() => {
-  server.listen(port, ip, () => {
-    console.log('Express server listening on http://%s:%d, in %s mode', ip, port, env)
+  server.listen(app.get('port'), () => {
+    console.log('Express server listening on port: ' + app.get('port'))
   })
 })
 
