@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { master } from '../../services/passport'
+import { master, session } from '../../services/passport'
 import { create, index, show, update, destroy } from './link.controller'
 import { schema } from './link.model'
 export Link, { schema } from './link.model'
@@ -8,7 +8,7 @@ const router = new Router()
 const { title, linktitle, url, banner, author, categories, tags } = schema.tree
 
 router.post('/',
-  master(),
+  session({ required: true, roles: ['admin'] }),
   create)
 
 router.get('/',
@@ -18,11 +18,11 @@ router.get('/:id',
   show)
 
 router.put('/:id',
-  master(),
+  session({ required: true, roles: ['admin'] }),
   update)
 
 router.delete('/:id',
-  master(),
+  session({ required: true, roles: ['admin'] }),
   destroy)
 
 export default router
