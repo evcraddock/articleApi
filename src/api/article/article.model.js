@@ -11,6 +11,9 @@ const articleSchema = new Schema({
     type: Date, 
     default: Date.now 
   },
+  content: {
+    type: String
+  },
   dataSource: {
     type: String
   },
@@ -38,6 +41,7 @@ articleSchema.methods = {
       title: this.title,
       url: this.url,
       publishDate: this.publishDate,
+      content: this.content,
       dataSource: this.dataSource,
       banner: this.banner,
       author: this.author,
