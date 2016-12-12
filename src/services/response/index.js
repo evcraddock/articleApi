@@ -5,6 +5,15 @@ export const success = (res, status) => (entity) => {
   return null
 }
 
+export const servererror = (res) => (entity) => {
+  if (entity) {
+    console.log(entity);
+  }
+  
+  res.status(500).end();
+  return null
+}
+
 export const notFound = (res) => (entity) => {
   if (entity) {
     return entity

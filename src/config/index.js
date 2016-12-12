@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
 
 var MONGODB_URI;
 if(process.env.VCAP_SERVICES == null) {
-  MONGODB_URI = 'mongodb://192.168.99.100:32768';
+  MONGODB_URI = 'mongodb://localhost:27017';
 }
 else {
   var vcap_services = JSON.parse(process.env.VCAP_SERVICES);
