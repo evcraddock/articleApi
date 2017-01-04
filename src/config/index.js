@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
 
 var MONGODB_URI;
 if(process.env.VCAP_SERVICES == null) {
-  MONGODB_URI = 'mongodb://localhost:27017';
+  MONGODB_URI = process.env.MONGODB_URI;
 }
 else {
   var vcap_services = JSON.parse(process.env.VCAP_SERVICES);
@@ -61,7 +61,7 @@ const config = {
   },
   production: {
     ip: process.env.IP || undefined,
-    port: process.env.PORT || 8080,
+    port: process.env.PORT || 9000,
     mongo: {
       uri: MONGODB_URI
     }
