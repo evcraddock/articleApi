@@ -1,5 +1,5 @@
-# mustangNewsService
-Nodejs Express REST service for mustangok.us
+# article API
+Nodejs Express REST service for serving news articles
 
 To run in docker:
 docker-compose up
