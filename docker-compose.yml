@@ -10,6 +10,7 @@ services:
     command: sh -c 'npm install; npm install -g nodemon; nodemon -e js, .'
     ports:
       - "9000:9000"
+      - "9229:9229"
     depends_on:
       - mongo
     networks:
