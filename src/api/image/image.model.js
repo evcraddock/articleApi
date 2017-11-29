@@ -3,13 +3,14 @@ import Gridfs from 'gridfs-stream'
 import mongoose from 'mongoose'
 
 export const upload = (req) => {
-
   return new Promise((resolve, reject) => { 
 
     if (!req.busboy) {
       throw new Error("No file was supplied");
       return;
     } 
+
+    var articleId = req.params.articleId;
 
     req.pipe(req.busboy);
 
@@ -22,6 +23,7 @@ export const upload = (req) => {
             filename: filename,
             mode: 'w',
             content_type: mimetype,
+            root: articleId
           });
 
           file.pipe(writeStream);
@@ -34,6 +36,7 @@ export const upload = (req) => {
           resolve(
               { 
                   _id: id,
+                  articleId: articleId,
                   filename: filename,
                   contentType: mimetype
               }
@@ -42,35 +45,41 @@ export const upload = (req) => {
   });
 }
 
-export const view = (id) => {
+export const view = (articleId, filename) => {
   return new Promise((resolve, reject) => { 
     var gfs = new Gridfs(mongoose.connection.db, mongoose.mongo);
 
-    gfs.findOne({ _id: id }, function (err, file) {
+    gfs.collection(articleId).find({
+      filename: filename
+    }).toArray(function(err, files){
         
-        if (err) {
-          reject(err);
-          return;
-        }
+      if (err) {
+        reject(err);
+        return;
+      }
 
-        if (!file) {
-          reject('File Does not exist');
-          return;
-        } 
+      if (files.length == 0) {
+        resolve()
+        return;
+      }
+      
+      let file = files[0];
 
-        var readstream = gfs.createReadStream({
-          _id: file._id
-        });
-
-        resolve(
-          { 
-              _id: id,
-              filename: file.filename,
-              contentType: file.contentType,
-              imagestream: readstream
-          }
-        );
+      let readStream = gfs.createReadStream({
+        id: file._id,  
+        filename: file.filename
       });
+      
+      resolve(
+        { 
+            _id: file._id,
+            filename: file.filename,
+            articleId: articleId,
+            contentType: file.contentType,
+            imagestream: readStream
+        }
+      );
+    });
   });
 }
 

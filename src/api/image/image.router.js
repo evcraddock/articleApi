@@ -5,16 +5,10 @@ import busboy from 'connect-busboy'
 
 const router = new Router()
 
-router.post('/',
-	busboy(),
-  	session({ required: true, roles: ['admin'] }),
-  	create)
+router.post('/:articleId', busboy(), session({ required: true, roles: ['admin'] }), create)
 
-router.get('/:id',
-  show)
+router.get('/:articleId/:filename', show)
 
-router.delete('/:id',
-  session({ required: true, roles: ['admin'] }),
-  destroy)
+router.delete('/:id', session({ required: true, roles: ['admin'] }), destroy)
 
 export default router
