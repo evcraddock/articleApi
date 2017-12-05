@@ -9,7 +9,6 @@ export const create = (req, res, next) =>
 export const show = ({ params }, res, next) => 
   view(params.articleId, params.filename)
   .then(notFound(res))
-  .then(success(res, 200))
   .then((file) => {
     if (file) {
       res.set('Content-Type', file.contentType);
@@ -18,6 +17,7 @@ export const show = ({ params }, res, next) =>
       file.imagestream.pipe(res);
     }
   })
+  .then(success(res, 200))
   .catch(servererror(res))
 
 export const destroy = ({ params }, res, next) => 

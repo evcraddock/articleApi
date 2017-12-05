@@ -48,33 +48,26 @@ export const upload = (req) => {
 export const view = (articleId, filename) => {
   return new Promise((resolve, reject) => { 
     var gfs = new Gridfs(mongoose.connection.db, mongoose.mongo);
-
-    gfs.collection(articleId).find({
-      filename: filename
-    }).toArray(function(err, files){
-        
+ 
+     gfs.collection(articleId).findOne({ filename: filename }, function (err, file) {      
       if (err) {
         reject(err);
         return;
       }
 
-      if (files.length == 0) {
+      if (!file) {
         resolve()
         return;
       }
-      
-      let file = files[0];
 
       let readStream = gfs.createReadStream({
-        id: file._id,  
-        filename: file.filename
+        _id: file._id
       });
       
       resolve(
         { 
             _id: file._id,
             filename: file.filename,
-            articleId: articleId,
             contentType: file.contentType,
             imagestream: readStream
         }
