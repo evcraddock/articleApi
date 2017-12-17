@@ -1,5 +1,5 @@
 import { success, notFound, servererror } from '../../services/response/'
-import { view, upload, remove } from './image.model'
+import { view, getlatest, upload, remove } from './image.model'
 
 export const create = (req, res, next) => 
   upload(req)
@@ -19,6 +19,20 @@ export const show = ({ params }, res, next) =>
   })
   .then(success(res, 200))
   .catch(servererror(res))
+
+export const latest = ({ param }, res, next) =>
+ getlatest(params.articleId)
+ .then(notFound(res))
+ .then((file) => {
+   if (file) {
+    res.set('Content-Type', file.contentType);
+    res.set('Content-Disposition', 'attachment; filename="' + file.filename + '"');
+
+    file.imagestream.pipe(res);
+   }
+ })
+ .then(success(res, 200))
+ .catch(servererror(res))
 
 export const destroy = ({ params }, res, next) => 
     remove(params.id)

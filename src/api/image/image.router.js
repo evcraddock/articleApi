@@ -9,6 +9,8 @@ router.post('/:articleId', busboy(), session({ required: true, roles: ['admin'] 
 
 router.get('/:articleId/:filename', show)
 
+// router.get('/:articleId/latest', latest)
+
 router.delete('/:id', session({ required: true, roles: ['admin'] }), destroy)
 
 export default router

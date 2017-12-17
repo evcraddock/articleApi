@@ -45,7 +45,46 @@ export const upload = (req) => {
   });
 }
 
+export const getlatest = (collectionName) => {
+  return new Promise((resolve, reject) => {
+    var gfs = new Gridfs(mongoose.connection.db, mongoose.mongo);
+
+    gfs.collection(collectionName).find({}).sort( { uploadDate: -1 } ).toArray(function(err, files){
+        
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      if (files.length == 0) {
+        resolve()
+        return;
+      }
+      
+      let file = files[0];
+
+      let readStream = gfs.createReadStream({
+        id: file._id,  
+        filename: file.filename
+      });
+      
+      resolve(
+        { 
+          _id: file._id,
+          filename: file.filename,
+          contentType: file.contentType,
+          imagestream: readStream
+        }
+      );
+    });
+  });
+}
+
 export const view = (articleId, filename) => {
+  if (filename === 'latest') {
+    return getlatest(articleId);
+  }
+
   return new Promise((resolve, reject) => { 
     var gfs = new Gridfs(mongoose.connection.db, mongoose.mongo);
  
