@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: article-svc
+  name: article-svc
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: article-svc
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: article-svc
+    spec:
+      containers:
+      - image: us.gcr.io/erikvancraddock/articleapi
+        imagePullPolicy: IfNotPresent
+        name: article-svc
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongo:27017"
+        - name: MASTER_KEY
+          value: "VIrPcAi4Rff0gBwdWklRl3ywMwgC6mZH"
+        - name: JWT_SECRET
+          value: "BOeX5ECZhiEsy8NSmAgJZ55eVcwQYnMy"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: article-svc
+  name: article-svc
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: article-svc
+  sessionAffinity: None
+  type: ClusterIP
